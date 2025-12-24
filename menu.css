@@ -1,0 +1,51 @@
+/* Estilos generales */
+body {
+  background-color: #f8f9fa;
+}
+
+/* Estilos para la tarjeta de la wallet */
+.wallet-card {
+  border-radius: 12px;
+}
+
+/* Estilos para el balance */
+.balance {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Estilos para el primer loader (el que está al inicio del documento) */
+#page-loader .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+#page-loader #loader-text {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Estilos para el segundo loader (overlay) */
+#page-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#page-loader-overlay .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+#page-loader-overlay #loader-text-overlay {
+  font-size: 1.2rem;
+  color: #333;
+}
