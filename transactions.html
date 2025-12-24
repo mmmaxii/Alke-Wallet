@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Wallet - Últimos Movimientos</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .wallet-card {
+      border-radius: 12px;
+    }
+
+    .movement-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .movement-title {
+      font-weight: 500;
+    }
+
+    .movement-amount {
+      font-weight: bold;
+    }
+
+    .amount-positive {
+      color: #28a745;
+    }
+
+    .amount-negative {
+      color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+      <div class="col-12 col-md-6">
+
+        <div class="card wallet-card shadow-sm">
+          <div class="card-body">
+
+            <h4 class="text-center mb-4">📊 Últimos Movimientos</h4>
+
+            <ul class="list-group mb-3">
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Compra en línea</div>
+                  <small class="text-muted">12 Dic 2025</small>
+                </div>
+                <div class="movement-amount amount-negative">
+                  - $50
+                </div>
+              </li>
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Depósito</div>
+                  <small class="text-muted">10 Dic 2025</small>
+                </div>
+                <div class="movement-amount amount-positive">
+                  + $100
+                </div>
+              </li>
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Transferencia recibida</div>
+                  <small class="text-muted">08 Dic 2025</small>
+                </div>
+                <div class="movement-amount amount-positive">
+                  + $75
+                </div>
+              </li>
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Compra en línea</div>
+                  <small class="text-muted">05 Dic 2025</small>
+                </div>
+                <div class="movement-amount amount-negative">
+                  - $5.550
+                </div>
+              </li>
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Depósito misma cuenta</div>
+                  <small class="text-muted">02 Dic 2025</small>
+                </div>
+                <div class="movement-amount amount-positive">
+                  + $10.500
+                </div>
+              </li>
+
+              <li class="list-group-item movement-item">
+                <div>
+                  <div class="movement-title">Transferencia recibida</div>
+                  <small class="text-muted">30 Nov 2025</small>
+                </div>
+                <div class="movement-amount amount-positive">
+                  + $7.575
+                </div>
+              </li>
+
+            </ul>
+
+            <a href="menu.html" class="btn btn-outline-secondary btn-block">
+              Volver al Menú Principal
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
