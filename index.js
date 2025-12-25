@@ -9,7 +9,7 @@ form.addEventListener("submit", (e) => {
     /*Validamos email y password*/
     const emailValido = validarEmail(email);
     const passwordValido = validarPassword(password);
-    
+
     if (!emailValido) {
         alert("El email ingresado no es válido. Por favor, ingresa un email con formato correcto.");
         return;
@@ -18,7 +18,7 @@ form.addEventListener("submit", (e) => {
         alert("La contraseña debe tener al menos 8 caracteres.");
         return;
     }
-    alert('¡Ingreso exitoso!');
+
 
     cambiarPagina("menu.html");
 
@@ -49,11 +49,19 @@ function validarPassword(password) {
     return password.length >= 8;
 }
 
-
 function cambiarPagina(url) {
-
-    setTimeout(() => {
+    Swal.fire({
+        title: '¡Ingreso exitoso!',
+        text: 'Redirigiendo...',
+        icon: 'success',
+        confirmButtonText: 'Genial',
+        confirmButtonColor: '#3085d6',
+        timer: 2500, // 2.5 segundos demora en entrar.
+        timerProgressBar: true //  Muestra una barrita de progreso
+    }).then((result) => {
+        // ALERTA: Al poner el código aquí directamente sin "if",
+        // se ejecutará SIEMPRE, ya sea que el tiempo se acabe 
+        // o que el usuario presione el botón.
         window.location.href = url;
-    }, 100);
+    });
 }
-

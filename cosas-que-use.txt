@@ -1,0 +1,2 @@
+Para las alertas de ingreso exitoso encontre una pagina que se llama
+sweetalert.
