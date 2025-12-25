@@ -1,0 +1,13 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.wallet-card {
+  border-radius: 12px;
+}
+
+
+#btnDepositar {
+    background-color: #9222a0;
+    color: #ffffff;
+}

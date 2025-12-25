@@ -7,16 +7,11 @@
   <title>Wallet - Depositar</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
-
-    .wallet-card {
-      border-radius: 12px;
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
+  
+  <link rel="stylesheet" href="deposit.css">
+   
 </head>
 
 <body>
@@ -29,6 +24,7 @@
 
             <h4 class="text-center mb-4">💰 Depositar Dinero</h4>
 
+            
             <form>
               <div class="form-group">
                 <label for="depositAmount">Monto a depositar</label>
@@ -41,12 +37,14 @@
                 >
               </div>
 
-              <button type="submit" class="btn btn-success btn-block mb-3">
+              <button type="submit" class="btn btn-success btn-block mb-3" 
+              id="btnDepositar">
                 Realizar Depósito
               </button>
             </form>
 
-            <a href="menu.html" class="btn btn-outline-secondary btn-block">
+            <a class="btn btn-outline-secondary btn-block"
+            id="btnVolver">
               Volver al Menú Principal
             </a>
 
@@ -56,5 +54,9 @@
       </div>
     </div>
   </div>
+  
+  
+  <script src="deposit.js"></script>
+
 </body>
 </html>
