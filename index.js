@@ -1,3 +1,4 @@
+
 const form = document.getElementById("login-form");
 
 form.addEventListener("submit", (e) => {
@@ -19,7 +20,16 @@ form.addEventListener("submit", (e) => {
         return;
     }
 
+    let dineroGuardado = localStorage.getItem("Balance");
 
+    if (dineroGuardado != null) {
+        dineroGuardado = Number(dineroGuardado);
+        if (dineroGuardado >= 1000000000) {
+            alert("Se ha detectado un saldo guardado de: $" + dineroGuardado + ". Por seguridad, si el saldo es excesivamente alto, se reiniciará el balance.");
+
+            localStorage.setItem("Balance", "0");
+        }
+    }
     cambiarPagina("menu.html");
 
 });

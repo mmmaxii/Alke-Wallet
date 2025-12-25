@@ -11,8 +11,8 @@
 </head>
 
 <body>
- 
-  
+
+
   <div class="container">
     <div class="row justify-content-center align-items-center vh-100">
       <div class="col-12 col-md-6">
@@ -20,7 +20,7 @@
           <div class="card-body text-center">
             <h4 class="mb-3">💳 Mi Billetera</h4>
             <p class="text-muted mb-1">Saldo disponible</p>
-            <div class="balance mb-4">$60.000</div>
+            <div class="balance mb-4" id="texto-saldo" type >$0</div>
             <div class="d-grid gap-2">
               <a class="btn btn-success btn-block mb-2" id="depositButton">
                 Depositar
@@ -38,6 +38,23 @@
     </div>
   </div>
 
+  <!-- Este script lo que hace es que carga el saldo -->
+  <script>
+    let dineroGuardado = localStorage.getItem("Balance");
+
+    // 2. Buscas tu div por su ID
+    let textoDineroGuardado = document.getElementById("texto-saldo");
+
+    // 3. Reemplazas el texto de adentro
+    if (dineroGuardado == null || dineroGuardado == undefined) {
+      dineroGuardado = 6000;
+      localStorage.setItem("Balance", dineroGuardado);
+    } else {
+      dineroGuardado = parseInt(dineroGuardado);
+    }
+
+    textoDineroGuardado.innerText = "$" + dineroGuardado;
+  </script>
 
   <script src="menu.js"></script>
 </body>
