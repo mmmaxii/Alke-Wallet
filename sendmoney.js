@@ -291,13 +291,15 @@ function activarBotonesAccion() {
             }
 
             // 2. Input numérico dentro del SweetAlert para capturar el monto.
+            let saldoActual = localStorage.getItem("Balance")
+            saldoActual = parseFloat(saldoActual)
             Swal.fire({
                 title: 'Enviar Dinero',
-                text: 'Ingresa el monto a transferir:',
+                html: `Tu saldo disponible es: <b>$${saldoActual}</b><br>Ingresa el monto a transferir:`,
                 input: 'number',
                 inputAttributes: {
                     min: 0,
-                    step: 0.1
+                    step: 1
                 },
                 showCancelButton: true,
                 confirmButtonText: 'Transferir',
