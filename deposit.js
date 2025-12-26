@@ -19,12 +19,12 @@ function cambiarPagina(url, nombrePagina) {
         width: "350px",
         title: "Redirigiendo a " + nombrePagina,
         showConfirmButton: false,
-        timer: 1500
+        timer: 1000
     });
 
     setTimeout(() => {
         window.location.href = url;
-    }, 1700);
+    }, 1000);
 }
 
 

@@ -23,3 +23,9 @@ body {
   font-size: 0.85rem;
   color: #6c757d;
 }
+
+.active-contact {
+    background-color: #e9ecef !important;
+    border-left: 5px solid #007bff;
+    font-weight: bold;
+}
