@@ -238,18 +238,16 @@ Gestiona la lógica de eliminación (actualizando el Array) y el envío de diner
 */
 function activarBotonesAccion() {
 
-    // --- A. LÓGICA BOTÓN ELIMINAR ---
+    // --- A. LÓGICA BOTÓN ELIMINAR (Sin cambios) ---
     const btnEliminar = document.getElementById('btnEliminarContacto');
 
     if (btnEliminar) {
         btnEliminar.addEventListener('click', () => {
-            // 1. Validación preventiva: Evitamos errores verificando que haya una selección válida.
             if (indiceSeleccionado === null) {
                 Swal.fire('Atención', 'Primero selecciona un contacto de la lista para eliminarlo.', 'warning');
                 return;
             }
 
-            // 2. Confirmación de seguridad con SweetAlert antes de borrar datos permanentes.
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "Vas a eliminar a este contacto permanentemente.",
@@ -259,52 +257,45 @@ function activarBotonesAccion() {
                 confirmButtonText: 'Sí, eliminar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // 3. Recuperamos la lista actual del LocalStorage para manipularla.
                     let contactos = JSON.parse(localStorage.getItem(CLAVE_CONTACTOS));
-
-                    // 4. Método .splice(): Elimina 1 elemento en la posición (índice) seleccionada.
                     contactos.splice(indiceSeleccionado, 1);
-
-                    // 5. Persistencia y Renderizado: Guardamos la lista nueva y actualizamos el HTML.
                     localStorage.setItem(CLAVE_CONTACTOS, JSON.stringify(contactos));
                     renderizarLista(contactos);
 
-                    // 6. Limpieza de estado: Reseteamos la selección y el input visual.
                     indiceSeleccionado = null;
                     document.getElementById('searchContact').value = '';
-
                     Swal.fire('Eliminado', 'El contacto ha sido borrado.', 'success');
                 }
             });
         });
     }
 
-    // --- B. LÓGICA BOTÓN ENVIAR DINERO ---
+    // --- B. LÓGICA BOTÓN ENVIAR DINERO (Modificada) ---
     const btnEnviar = document.getElementById('btnEnviarDinero');
 
     if (btnEnviar) {
         btnEnviar.addEventListener('click', () => {
-            // 1. Verificamos nuevamente que haya un destinatario seleccionado.
             if (indiceSeleccionado === null) {
                 Swal.fire('Atención', 'Selecciona un contacto para enviarle dinero.', 'info');
                 return;
             }
 
-            // 2. Input numérico dentro del SweetAlert para capturar el monto.
-            let saldoActual = localStorage.getItem("Balance")
-            saldoActual = parseFloat(saldoActual)
+            // Recuperamos el nombre del contacto para el registro
+            // (Volvemos a leer la lista porque indiceSeleccionado es solo un número)
+            const listaContactos = JSON.parse(localStorage.getItem(CLAVE_CONTACTOS));
+            const contactoDestino = listaContactos[indiceSeleccionado];
+
+            let saldoActual = localStorage.getItem("Balance");
+            saldoActual = parseFloat(saldoActual); // Asegurar que sea número para mostrarlo
+
             Swal.fire({
-                title: 'Enviar Dinero',
-                html: `Tu saldo disponible es: <b>$${saldoActual}</b><br>Ingresa el monto a transferir:`,
+                title: `Enviar a ${contactoDestino.nombre}`, // Muestra el nombre en el título
+                html: `Saldo disponible: <b>$${saldoActual}</b><br>Ingresa el monto:`,
                 input: 'number',
-                inputAttributes: {
-                    min: 0,
-                    step: 1
-                },
+                inputAttributes: { min: 0, step: 1 },
                 showCancelButton: true,
                 confirmButtonText: 'Transferir',
                 preConfirm: (monto) => {
-                    // Validación simple: El monto debe existir y ser positivo.
                     if (!monto || monto <= 0) {
                         Swal.showValidationMessage('Ingresa un monto válido mayor a 0');
                     }
@@ -313,25 +304,28 @@ function activarBotonesAccion() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const montoEnviar = parseFloat(result.value);
+                    
+                    // Volvemos a leer saldo por seguridad
+                    let saldo = localStorage.getItem("Balance");
+                    saldo = saldo ? parseFloat(saldo) : 0;
 
-                    // 3. Lectura del saldo: Obtenemos la variable 'Balance' compartida con el menú.
-                    let saldoActual = localStorage.getItem("Balance");
-                    saldoActual = saldoActual ? parseFloat(saldoActual) : 0;
-
-                    // 4. Validación de fondos: No permitimos enviar más de lo que se tiene.
-                    if (saldoActual < montoEnviar) {
-                        Swal.fire('Saldo Insuficiente', `Solo tienes $${saldoActual} disponibles.`, 'error');
+                    if (saldo < montoEnviar) {
+                        Swal.fire('Saldo Insuficiente', `Solo tienes $${saldo} disponibles.`, 'error');
                         return;
                     }
 
-                    // 5. Transacción: Restamos el dinero y actualizamos la "Base de datos" (LocalStorage).
-                    const nuevoSaldo = saldoActual - montoEnviar;
+                    // 1. Descontar dinero
+                    const nuevoSaldo = saldo - montoEnviar;
                     localStorage.setItem("Balance", nuevoSaldo);
 
-                    // 6. Feedback de éxito y redirección al menú principal.
+                    // 2. REGISTRAR LA TRANSACCIÓN (Aquí llamamos a la nueva función)
+                    // Pasamos el nombre del contacto y el monto gastado
+                    registrarTransaccion(contactoDestino.nombre, montoEnviar);
+
+                    // 3. Feedback y redirección
                     Swal.fire({
                         title: '¡Envío Exitoso!',
-                        text: `Has enviado $${montoEnviar}. Tu nuevo saldo es $${nuevoSaldo}`,
+                        text: `Has enviado $${montoEnviar} a ${contactoDestino.nombre}`,
                         icon: 'success'
                     }).then(() => {
                         window.location.href = 'menu.html';
@@ -345,3 +339,25 @@ function activarBotonesAccion() {
 
 
 
+function registrarTransaccion(nombreContacto, monto) {
+    // 1. Obtenemos la fecha actual formateada (ej: 26/12/2025)
+    const fechaActual = new Date().toLocaleDateString();
+
+    // 2. Creamos el objeto con los datos que pide el historial
+    const nuevaTransaccion = {
+        detalle: `Transferencia a ${nombreContacto}`, // El texto exacto que pediste
+        fecha: fechaActual,                           // La fecha para mostrar abajo
+        monto: -monto,                                // El monto negativo para mostrar a la derecha
+        esIngreso: false                              // Marcador útil para estilos (color rojo)
+    };
+
+    // 3. Obtenemos el historial actual o creamos un array vacío si es el primero
+    let movimientos = JSON.parse(localStorage.getItem("Movimientos")) || [];
+
+    // 4. Agregamos el nuevo movimiento al PRINCIPIO de la lista (unshift)
+    // para que salga arriba de todo en el historial.
+    movimientos.unshift(nuevaTransaccion);
+
+    // 5. Guardamos en LocalStorage
+    localStorage.setItem("Movimientos", JSON.stringify(movimientos));
+}
