@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,32 +9,9 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-  <style>
-    body {
-      background-color: #f8f9fa;
-    }
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    .wallet-card {
-      border-radius: 12px;
-    }
-
-    .contact-item {
-      cursor: pointer;
-    }
-
-    .contact-item:hover {
-      background-color: #f1f1f1;
-    }
-
-    .contact-name {
-      font-weight: 600;
-    }
-
-    .contact-details {
-      font-size: 0.85rem;
-      color: #6c757d;
-    }
-  </style>
+  <link rel="stylesheet" href="sendmoney.css">
 </head>
 
 <body>
@@ -46,15 +24,9 @@
 
             <h4 class="text-center mb-4">📤 Enviar Dinero</h4>
 
-            <!-- Buscar contacto -->
             <div class="form-group">
               <label for="searchContact">Buscar contacto</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                id="searchContact" 
-                placeholder="Nombre, CBU o alias"
-              >
+              <input type="text" class="form-control" id="searchContact" placeholder="Nombre, CBU o alias">
             </div>
 
             <button class="btn btn-outline-primary btn-block mb-3">
@@ -63,32 +35,21 @@
 
             <hr>
 
-            <!-- Lista de contactos -->
+
             <h6 class="mb-2">Contactos</h6>
 
-            <ul class="list-group mb-3">
-              <li class="list-group-item contact-item">
-                <div class="contact-name">John Doe</div>
-                <div class="contact-details">
-                  CBU: 123456789 · Alias: john.doe · Banco ABC
-                </div>
-              </li>
-
-              <li class="list-group-item contact-item">
-                <div class="contact-name">Jane Smith</div>
-                <div class="contact-details">
-                  CBU: 987654321 · Alias: jane.smith · Banco XYZ
-                </div>
-              </li>
+            <ul class="list-group mb-3" id="listaContactos">
             </ul>
 
-            <button class="btn btn-primary btn-block mb-3">
+            <button class="btn btn-primary btn-block mb-3" id="btnEnviarDinero">
               Enviar Dinero
             </button>
 
-            <a href="menu.html" class="btn btn-outline-secondary btn-block">
+            <a href="menu.html" class="btn btn-outline-secondary btn-block" id="btnVolver">
               Volver al Menú Principal
             </a>
+
+            <script src="sendmoney.js"></script>
 
           </div>
         </div>
@@ -96,5 +57,7 @@
       </div>
     </div>
   </div>
+
 </body>
+
 </html>
