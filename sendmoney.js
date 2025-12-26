@@ -1,5 +1,6 @@
 // Definimos una clave única para el almacenamiento
 const CLAVE_CONTACTOS = "wallet_contactos";
+const CLAVE_HISTORIAL = "wallet_historial";
 
 // Esto es lo que se cargará si el usuario no tiene contactos guardados
 const contactosIniciales = [
@@ -304,7 +305,7 @@ function activarBotonesAccion() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     const montoEnviar = parseFloat(result.value);
-                    
+
                     // Volvemos a leer saldo por seguridad
                     let saldo = localStorage.getItem("Balance");
                     saldo = saldo ? parseFloat(saldo) : 0;
@@ -314,20 +315,18 @@ function activarBotonesAccion() {
                         return;
                     }
 
-                    // 1. Descontar dinero
+                    // Descontar dinero
                     const nuevoSaldo = saldo - montoEnviar;
                     localStorage.setItem("Balance", nuevoSaldo);
 
-                    // 2. REGISTRAR LA TRANSACCIÓN (Aquí llamamos a la nueva función)
-                    // Pasamos el nombre del contacto y el monto gastado
-                    registrarTransaccion(contactoDestino.nombre, montoEnviar);
-
-                    // 3. Feedback y redirección
                     Swal.fire({
                         title: '¡Envío Exitoso!',
                         text: `Has enviado $${montoEnviar} a ${contactoDestino.nombre}`,
                         icon: 'success'
                     }).then(() => {
+                        // Registramos antes de irnos.
+                        registrarTransaccion(contactoDestino.nombre, montoEnviar, Boolean(false));
+
                         window.location.href = 'menu.html';
                     });
                 }
@@ -339,25 +338,28 @@ function activarBotonesAccion() {
 
 
 
-function registrarTransaccion(nombreContacto, monto) {
-    // 1. Obtenemos la fecha actual formateada (ej: 26/12/2025)
+function registrarTransaccion(nombreContacto, monto, deposito) {
+
+
+    // 1. Obtenemos la fecha actual
     const fechaActual = new Date().toLocaleDateString();
 
-    // 2. Creamos el objeto con los datos que pide el historial
+    // 2. Creamos el objeto con las propiedades EXACTAS que usa tu 'renderizarMovimientos'
+
     const nuevaTransaccion = {
-        detalle: `Transferencia a ${nombreContacto}`, // El texto exacto que pediste
-        fecha: fechaActual,                           // La fecha para mostrar abajo
-        monto: -monto,                                // El monto negativo para mostrar a la derecha
-        esIngreso: false                              // Marcador útil para estilos (color rojo)
-    };
+        titulo: `Transferencia a ` + nombreContacto, // Usamos 'titulo' para que se vea en el HTML
+        fecha: fechaActual,
+        monto: -monto  // Guardamos negativo para que salga en rojo y sin el signo '+'
+    }
 
-    // 3. Obtenemos el historial actual o creamos un array vacío si es el primero
-    let movimientos = JSON.parse(localStorage.getItem("Movimientos")) || [];
 
-    // 4. Agregamos el nuevo movimiento al PRINCIPIO de la lista (unshift)
-    // para que salga arriba de todo en el historial.
-    movimientos.unshift(nuevaTransaccion);
+    // 3. Obtenemos el historial usando la MISMA clave que usas en cargarMovimientos
+    // (Asegúrate de que esta variable sea accesible aquí o pon el string directo "wallet_historial")
+    let movimientos = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL)) || [];
 
-    // 5. Guardamos en LocalStorage
-    localStorage.setItem("Movimientos", JSON.stringify(movimientos));
-}
+        // 4. Agregamos el nuevo movimiento al principio (arriba de todo)
+        movimientos.unshift(nuevaTransaccion);
+
+        // 5. Guardamos en LocalStorage
+        localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(movimientos));
+    }

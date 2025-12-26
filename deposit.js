@@ -1,3 +1,4 @@
+const CLAVE_HISTORIAL = "wallet_historial";
 
 const btnVolver = document.getElementById('btnVolver');
 
@@ -62,7 +63,7 @@ botonDepositar.addEventListener('click', (e) => {
     // Esto sobrescribe el valor viejo con el nuevo
     localStorage.setItem("Balance", nuevoSaldo);
 
-  
+    
 
     Swal.fire({
         title: '¡Depósito realizado!',
@@ -82,6 +83,7 @@ botonDepositar.addEventListener('click', (e) => {
         // Esto hace que si dan clic fuera, no se cierre solo
         allowOutsideClick: false 
     }).then((result) => {
+        registrarDeposito(montoIngresado);
         
         if (result.isConfirmed) {
             window.location.href = 'menu.html';
@@ -91,3 +93,25 @@ botonDepositar.addEventListener('click', (e) => {
         }
     });
 });
+
+
+
+function registrarDeposito(monto) {
+    const fechaActual = new Date().toLocaleDateString();
+
+    const nuevaTransaccion = {
+        titulo: "Depósito de dinero", // Título fijo para depósitos
+        fecha: fechaActual,
+        monto: monto  // POSITIVO: Para que se pinte verde
+    };
+
+    // Leemos el historial existente
+    let movimientos = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL)) || [];
+
+    // Agregamos al principio
+    movimientos.unshift(nuevaTransaccion);
+
+    // Guardamos
+    localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(movimientos));
+}
+
