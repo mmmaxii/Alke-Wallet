@@ -1,0 +1,29 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.wallet-card {
+  border-radius: 12px;
+}
+
+.movement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.movement-title {
+  font-weight: 500;
+}
+
+.movement-amount {
+  font-weight: bold;
+}
+
+.amount-positive {
+  color: #28a745;
+}
+
+.amount-negative {
+  color: #dc3545;
+}
