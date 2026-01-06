@@ -1,2 +1,3 @@
 Para las alertas de ingreso exitoso encontre una pagina que se llama
-sweetalert.
+sweetalert. Tiene varias funcionalidades de alertas, lo implemente muchas 
+veces durante la creacion del codigo. 

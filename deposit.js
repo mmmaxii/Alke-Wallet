@@ -1,5 +1,5 @@
 const CLAVE_HISTORIAL = "wallet_historial";
-
+// Agregado de un comentario para ver que pasa con git.
 const btnVolver = document.getElementById('btnVolver');
 
 /*Hace lo mismo que se hace en menu.js*/
