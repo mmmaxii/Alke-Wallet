@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Wallet - Enviar Dinero</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="../assets/css/sendmoney.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+      <div class="col-12 col-md-6">
+
+        <div class="card wallet-card shadow-sm">
+          <div class="card-body">
+
+            <h4 class="text-center mb-4">📤 Enviar Dinero</h4>
+
+            <div class="form-group">
+              <label for="searchContact">Buscar contacto</label>
+              <input type="text" class="form-control" id="searchContact" placeholder="Nombre, CBU o alias">
+            </div>
+
+            <button class="btn btn-outline-primary btn-block mb-3">
+              + Agregar nuevo contacto
+            </button>
+
+            <hr>
+
+
+            <h6 class="mb-2">Contactos</h6>
+
+            <ul class="list-group mb-3" id="listaContactos">
+            </ul>
+
+            <button class="btn btn-primary btn-block" id="btnEnviarDinero">
+              Enviar Dinero
+            </button>
+
+            <button type="button" class="btn btn-outline-danger btn-block" id="btnEliminarContacto">Eliminar
+              Contacto</button>
+
+
+            <a  class="btn btn-outline-secondary btn-block" id="btnVolver">
+              Volver al Menú Principal
+            </a>
+
+            <script src="../assets/js/sendmoney.js"></script>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
