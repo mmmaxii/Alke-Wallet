@@ -1,4 +1,4 @@
-
+/*Este es un comentario para ver como funciona los branch's en git*/
 const form = document.getElementById("login-form");
 
 form.addEventListener("submit", (e) => {
