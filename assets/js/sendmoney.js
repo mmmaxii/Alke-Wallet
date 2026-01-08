@@ -114,20 +114,63 @@ Esta funcion se encarga de mostrar el popup para agregar un nuevo contacto.
 Luego valida los datos ingresados y si todo está bien, lo guarda en el LocalStorage
 y actualiza la lista en pantalla.
 */
+
 function agregarContactoNuevo() {
     Swal.fire({
         title: 'Nuevo Contacto',
-        // HTML personalizado con los 4 inputs que nos pide el enunciado.
+        
+        // --- FONDO Y TEXTO NUEVOS---
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#ffffff',
+        
+        // --- INPUTS DE VIDRIO ---
+        // Inyectamos CSS aquí mismo para forzar que los inputs sean transparentes ya que el
+        // los inputs al parecer tienen mucha prioridad (Hablando de SweetAlert). 
+        // La manera que encontre de modificarlo es la siguiente
         html: `
+            <style>
+                .swal2-input {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                    border-radius: 12px !important;
+                    color: white !important;
+                }
+                .swal2-input::placeholder {
+                    color: rgba(255, 255, 255, 0.5) !important;
+                }
+                .swal2-validation-message {
+                    background: rgba(0, 0, 0, 0.2) !important;
+                    color: #ffcccc !important;
+                }
+            </style>
+            
             <input id="input-nombre" class="swal2-input" placeholder="Nombre y Apellido">
             <input id="input-cbu" class="swal2-input" placeholder="Número de CBU" type="number">
             <input id="input-alias" class="swal2-input" placeholder="Alias (ej: Name.wallet)">
             <input id="input-banco" class="swal2-input" placeholder="Nombre del Banco">
         `,
+        
         focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: 'Guardar',
+        
+        // --- BOTONES ---
+        // Botón Guardar. Esto lo aplique varias veces antes, pero es mas comodo inyectar codigo html directamente
+        // para poder modificar el estilo de los botones a gusto.
+        confirmButtonText: '<span style="color: #582551; font-weight: bold;">Guardar</span>',
+        confirmButtonColor: '#ffffff', 
+        
+        // Botón Cancelar: Morado oscuro
         cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#480ca8',
+
+        // Animaciones suaves
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+
         // preConfirm: Se ejecuta antes de cerrar para validar los datos
         preConfirm: () => {
             const nombre = document.getElementById('input-nombre').value;
@@ -171,13 +214,16 @@ function agregarContactoNuevo() {
             // 5. Volver a pintar la lista para ver el cambio al instante
             renderizarLista(contactos);
 
-            // Mensaje de éxito
+            // Mensaje de éxito (TAMBIÉN ESTILIZADO)
             Swal.fire({
                 title: '¡Guardado!',
                 text: 'El contacto se agregó correctamente',
                 icon: 'success',
+                iconColor: '#ffffff', // Check blanco
                 timer: 2000,
-                showConfirmButton: false
+                showConfirmButton: false,
+                background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                color: '#ffffff'
             });
         }
     });
