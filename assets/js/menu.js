@@ -25,19 +25,39 @@ botons.forEach(boton => {
 });
 
 function cambiarPagina(url, nombrePagina) {
-    /*Muestra que se redirige en la parte superior derecha*/
     Swal.fire({
-        position: "top-end",
-        icon: "info",
-        iconColor: "#d14fd3ff",
-        // Agregando mas personalización 
-        width: "350px",
-        title: "Redirigiendo a " + nombrePagina,
-        showConfirmButton: false,
-        timer: 1000
-    });
+        // Usamos el nombre de la página como título principal
+        title: nombrePagina, 
+        html: '<p style="margin-top:8px;">Redirigiendo...</p>',
+        
+        // Icono de información, pero en blanco para que resalte
+        icon: 'info',
+        iconColor: '#ffffff',
 
-    setTimeout(() => {
+        showConfirmButton: false,
+        timer: 1500, // Un poco más rápido que el login (1.5 seg) para que sea ágil
+        timerProgressBar: true,
+
+        // El mismo fondo gradiente del Login
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#ffffff',
+
+        // Las mismas animaciones
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+
+        // Personalización de la barra de progreso (blanca semitransparente)
+        didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('.swal2-timer-progress-bar');
+            if (b) b.style.backgroundColor = 'rgba(255,255,255,0.5)';
+        },
+
+        allowOutsideClick: false
+    }).then(() => {
         window.location.href = url;
-    }, 1000);
+    });
 }
