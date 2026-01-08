@@ -60,27 +60,26 @@ function validarPassword(password) {
 
 function cambiarPagina(url) {
     Swal.fire({
-        title: '¡Ingreso exitoso!',
-        text: 'Redirigiendo a tu billetera...',
+        title: 'Bienvenido 👋',
+        html: '<p style="margin-top:8px;">Preparando tu billetera...</p>',
         icon: 'success',
 
-        /* Color principal acorde al diseño */
-        // confirmButtonColor: '#7b2cbf',
-
-        /* Hace que no se vea tan "alerta" y mas fluido */
         showConfirmButton: false,
-
-        /* Tiempo de espera antes de redirigir */
-        timer: 2200,
+        timer: 2000,
         timerProgressBar: true,
 
-        /* Estilos personalizados */
+        confirmButtonColor: '#7b2cbf',
         background: '#ffffff',
         color: '#2b2b2b',
 
-        /* Evita que el usuario cierre la alerta manualmente */
-        allowOutsideClick: false,
-        allowEscapeKey: false
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+
+        allowOutsideClick: false
     }).then(() => {
         window.location.href = url;
     });
