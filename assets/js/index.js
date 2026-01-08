@@ -60,7 +60,7 @@ function validarPassword(password) {
 
 function cambiarPagina(url) {
     Swal.fire({
-        title: 'Bienvenido 👋',
+        title: 'Bienvenido',
         html: '<p style="margin-top:8px;">Preparando tu billetera...</p>',
         icon: 'success',
 
@@ -68,15 +68,19 @@ function cambiarPagina(url) {
         timer: 2000,
         timerProgressBar: true,
 
-        confirmButtonColor: '#7b2cbf',
-        background: '#ffffff',
-        color: '#2b2b2b',
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#e8e8e8ff',
 
         showClass: {
             popup: 'animate__animated animate__fadeInUp animate__faster'
         },
         hideClass: {
             popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+
+        didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('.swal2-timer-progress-bar');
+            if (b) b.style.backgroundColor = 'rgba(255,255,255,0.5)';
         },
 
         allowOutsideClick: false
