@@ -44,23 +44,39 @@ function configurarBotones() {
 }
 
 
-// Reutilizacion
 function cambiarPagina(url, nombrePagina) {
-    /*Muestra que se redirige en la parte superior derecha*/
     Swal.fire({
-        position: "top-end",
-        icon: "info",
-        iconColor: "#d14fd3ff",
-        width: "350px",
-        title: "Redirigiendo a " + nombrePagina,
+        title: 'Redirigiendo a ' + nombrePagina,
+        html: '<p style="margin-top: 10px;">Procesando solicitud...</p>',
+        
+        icon: 'info',
+        iconColor: '#ffffff',
+        timer: 1500,
+        timerProgressBar: true,
         showConfirmButton: false,
-        timer: 1000
-    });
+        
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#ffffff',
 
-    setTimeout(() => {
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+        
+        // Estilo de la barrita de carga (blanca semitransparente)
+        didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('.swal2-timer-progress-bar');
+            if (b) b.style.backgroundColor = 'rgba(255,255,255,0.5)';
+        },
+        
+        allowOutsideClick: false
+    }).then(() => {
         window.location.href = url;
-    }, 1000);
+    });
 }
+
 
 
 
