@@ -285,45 +285,93 @@ Gestiona la lógica de eliminación (actualizando el Array) y el envío de diner
 */
 function activarBotonesAccion() {
 
-    // --- A. LÓGICA BOTÓN ELIMINAR (Sin cambios) ---
+    // --- LÓGICA BOTÓN ELIMINAR ---
     const btnEliminar = document.getElementById('btnEliminarContacto');
 
     if (btnEliminar) {
         btnEliminar.addEventListener('click', () => {
             if (indiceSeleccionado === null) {
-                Swal.fire('Atención', 'Primero selecciona un contacto de la lista para eliminarlo.', 'warning');
+                // Alerta: Atención 
+                Swal.fire({
+                    title: 'Atención',
+                    text: 'Primero selecciona un contacto de la lista para eliminarlo.',
+                    icon: 'warning',
+                    iconColor: '#ffffff',
+                    background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                    color: '#ffffff',
+                    confirmButtonColor: '#ffffff',
+                    confirmButtonText: '<span style="color: #582551; font-weight: bold;">Entendido</span>'
+                });
                 return;
             }
 
+            // Alerta: Confirmación de Borrado 
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "Vas a eliminar a este contacto permanentemente.",
                 icon: 'warning',
+                iconColor: '#ffffff',
+                background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                color: '#ffffff',
+
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar'
+                
+                // Botón Eliminar (Rojo brillante para peligro)
+                confirmButtonColor: '#ff4d4d',
+                confirmButtonText: 'Sí, eliminar',
+                
+                // Botón Cancelar (Morado oscuro)
+                cancelButtonColor: '#480ca8',
+                cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
                     let contactos = JSON.parse(localStorage.getItem(CLAVE_CONTACTOS));
+
+                    // Aqui sabemos que el indice seleccionado siempre sera el que el usuario elige.
+                    // Ya que este se actualiza cada vez con la función seleccionarContacto.
                     contactos.splice(indiceSeleccionado, 1);
+                    // Esto elimina 1 elemento desde el indice seleccionado. Es decir 
+                    // Elimina el contacto que se selecciono.
+
                     localStorage.setItem(CLAVE_CONTACTOS, JSON.stringify(contactos));
                     renderizarLista(contactos);
 
                     indiceSeleccionado = null;
                     document.getElementById('searchContact').value = '';
-                    Swal.fire('Eliminado', 'El contacto ha sido borrado.', 'success');
+                    
+                    // Alerta: Eliminado con éxito (Estilo Glass)
+                    Swal.fire({
+                        title: 'Eliminado',
+                        text: 'El contacto ha sido borrado.',
+                        icon: 'success',
+                        iconColor: '#ffffff',
+                        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                        color: '#ffffff',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 }
             });
         });
     }
 
-    // --- B. LÓGICA BOTÓN ENVIAR DINERO (Modificada) ---
+    // --- LÓGICA BOTÓN ENVIAR DINERO ---
     const btnEnviar = document.getElementById('btnEnviarDinero');
 
     if (btnEnviar) {
         btnEnviar.addEventListener('click', () => {
             if (indiceSeleccionado === null) {
-                Swal.fire('Atención', 'Selecciona un contacto para enviarle dinero.', 'info');
+                // Alerta: Atención
+                Swal.fire({
+                    title: 'Atención',
+                    text: 'Selecciona un contacto para enviarle dinero.',
+                    icon: 'info',
+                    iconColor: '#ffffff',
+                    background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                    color: '#ffffff',
+                    confirmButtonColor: '#ffffff',
+                    confirmButtonText: '<span style="color: #582551; font-weight: bold;">Entendido</span>'
+                });
                 return;
             }
 
@@ -335,13 +383,43 @@ function activarBotonesAccion() {
             let saldoActual = localStorage.getItem("Balance");
             saldoActual = parseFloat(saldoActual); // Asegurar que sea número para mostrarlo
 
+            // Alerta: Ingreso de Monto +
             Swal.fire({
                 title: `Enviar a ${contactoDestino.nombre}`, // Muestra el nombre en el título
-                html: `Saldo disponible: <b>$${saldoActual}</b><br>Ingresa el monto:`,
+                
+                // Inyectamos estilos CSS aquí para el Input
+                html: `
+                    <style>
+                        .swal2-input {
+                            background: rgba(255, 255, 255, 0.05) !important;
+                            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+                            color: white !important;
+                        }
+                        .swal2-input::placeholder { color: rgba(255, 255, 255, 0.5) !important; }
+                        .swal2-validation-message { background: rgba(0,0,0,0.2) !important; color: #ffcccc !important; }
+                    </style>
+                    <p>Saldo disponible: <b>$${saldoActual}</b></p>
+                    <p style="margin-top:10px; font-size: 0.9em;">Ingresa el monto:</p>
+                `,
+                
                 input: 'number',
                 inputAttributes: { min: 0, step: 1 },
+                // Esto segun sweetalert es, min: minimo que puede tener el input. Y avanza de 1 en 1 si se hace 
+                // con la barra que esta a la derecha del input.
+                
+                background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                color: '#ffffff',
+
                 showCancelButton: true,
-                confirmButtonText: 'Transferir',
+                
+                // Botón Transferir (Blanco)
+                confirmButtonColor: '#ffffff',
+                confirmButtonText: '<span style="color: #582551; font-weight: bold;">Transferir</span>',
+                
+                // Botón Cancelar (Morado oscuro)
+                cancelButtonColor: '#480ca8',
+                cancelButtonText: 'Cancelar',
+
                 preConfirm: (monto) => {
                     if (!monto || monto <= 0) {
                         Swal.showValidationMessage('Ingresa un monto válido mayor a 0');
@@ -357,18 +435,35 @@ function activarBotonesAccion() {
                     saldo = saldo ? parseFloat(saldo) : 0;
 
                     if (saldo < montoEnviar) {
-                        Swal.fire('Saldo Insuficiente', `Solo tienes $${saldo} disponibles.`, 'error');
+                        // Alerta: Error de Saldo 
+                        Swal.fire({
+                            title: 'Saldo Insuficiente',
+                            text: `Solo tienes $${saldo} disponibles.`,
+                            icon: 'error',
+                            iconColor: '#ffffff',
+                            background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                            color: '#ffffff',
+                            confirmButtonColor: '#ffffff',
+                            confirmButtonText: '<span style="color: #582551; font-weight: bold;">Entendido</span>'
+                        });
                         return;
                     }
 
-                    // Descontar dinero
+                    // Si pasa la alerta anterior, entonces la transferencia fue efectiva. Por lo que descontamos el monto de su balance.
+
                     const nuevoSaldo = saldo - montoEnviar;
                     localStorage.setItem("Balance", nuevoSaldo);
 
+                    // Alerta: Éxito
                     Swal.fire({
                         title: '¡Envío Exitoso!',
                         text: `Has enviado $${montoEnviar} a ${contactoDestino.nombre}`,
-                        icon: 'success'
+                        icon: 'success',
+                        iconColor: '#ffffff',
+                        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+                        color: '#ffffff',
+                        showConfirmButton: false,
+                        timer: 2000
                     }).then(() => {
                         // Registramos antes de irnos.
                         registrarTransaccion(contactoDestino.nombre, montoEnviar, Boolean(false));
@@ -383,14 +478,13 @@ function activarBotonesAccion() {
 
 
 
-
 function registrarTransaccion(nombreContacto, monto, deposito) {
 
 
     // 1. Obtenemos la fecha actual
     const fechaActual = new Date().toLocaleDateString();
 
-    // 2. Creamos el objeto con las propiedades EXACTAS que usa tu 'renderizarMovimientos'
+    // 2. Creamos el objeto con las propiedades EXACTAS que usa 'renderizarMovimientos'
 
     const nuevaTransaccion = {
         titulo: `Transferencia a ` + nombreContacto, // Usamos 'titulo' para que se vea en el HTML
@@ -400,7 +494,6 @@ function registrarTransaccion(nombreContacto, monto, deposito) {
 
 
     // 3. Obtenemos el historial usando la MISMA clave que usas en cargarMovimientos
-    // (Asegúrate de que esta variable sea accesible aquí o pon el string directo "wallet_historial")
     let movimientos = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL)) || [];
 
         // 4. Agregamos el nuevo movimiento al principio (arriba de todo)
