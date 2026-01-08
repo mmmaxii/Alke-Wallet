@@ -26,11 +26,23 @@
 
             <ul class="list-group mb-3" id="listaMovimientos">
             </ul>
-            
+            <div id="paginacion-container" class="d-flex justify-content-between align-items-center mb-3">
+              <button class="btn btn-sm btn-glass" id="btnAnterior" disabled>
+                <i class="fas fa-chevron-left"></i> Anterior
+              </button>
+
+              <span id="infoPagina" class="text-white font-weight-bold">Pág 1</span>
+
+              <button class="btn btn-sm btn-glass" id="btnSiguiente">
+                Siguiente <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+
             <a class="btn btn-outline-secondary btn-block" id="btnVolver">
               Volver al Menú Principal
             </a>
-
+            
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="../assets/js/transactions.js"></script>
 
           </div>
