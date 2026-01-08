@@ -49,11 +49,6 @@ h2.text-center.mb-4 {
     padding-left: 5px;
 }
 
-.form-group label {
-    font-weight: 500;
-    color: #3f3f3f;
-    margin-bottom: 8px;
-}
 
 /* Inputs que se ven mas bonitos */
 .form-control {
