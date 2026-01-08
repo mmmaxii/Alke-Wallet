@@ -10,24 +10,40 @@ btnVolver.addEventListener('click', (e) => {
     cambiarPagina('menu.html', 'Menú Principal');
 });
 
+// Este bloque de codigo lo he reutilizado hartas veces, estaria bueno automatizarlo como una funcion exportable.
 
 function cambiarPagina(url, nombrePagina) {
-    /*Muestra que se redirige en la parte superior derecha*/
     Swal.fire({
-        position: "top-end",
-        icon: "info",
-        iconColor: "#d14fd3ff",
-        width: "350px",
-        title: "Redirigiendo a " + nombrePagina,
+        title: 'Redirigiendo a ' + nombrePagina,
+        html: '<p style="margin-top: 10px;">Procesando solicitud...</p>',
+        
+        icon: 'info',
+        iconColor: '#ffffff',
+        timer: 1500,
+        timerProgressBar: true,
         showConfirmButton: false,
-        timer: 1000
-    });
+        
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#ffffff',
 
-    setTimeout(() => {
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+        
+        // Estilo de la barrita de carga (blanca semitransparente)
+        didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('.swal2-timer-progress-bar');
+            if (b) b.style.backgroundColor = 'rgba(255,255,255,0.5)';
+        },
+        
+        allowOutsideClick: false
+    }).then(() => {
         window.location.href = url;
-    }, 1000);
+    });
 }
-
 
 // Ahora haremos lo correspondiente a depositar dinero
 // Se supone que deberia almacenarse en una base de datos,
@@ -37,9 +53,9 @@ const botonDepositar = document.getElementById('btnDepositar');
 const inputMonto = document.getElementById('depositAmount');
 
 botonDepositar.addEventListener('click', (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    
+
     // parseFloat convierte el texto "500" a número 500.0
     const montoIngresado = parseFloat(inputMonto.value);
 
@@ -63,33 +79,52 @@ botonDepositar.addEventListener('click', (e) => {
     // Esto sobrescribe el valor viejo con el nuevo
     localStorage.setItem("Balance", nuevoSaldo);
 
-    
+
 
     Swal.fire({
         title: '¡Depósito realizado!',
-        text: `Has agregado $${montoIngresado}. Saldo total: $${nuevoSaldo}`,
+        // Usamos HTML para poner negrita a los montos y que se vea mejor
+        html: `
+        <p>Has agregado <b>$${montoIngresado}</b></p>
+        <p>Saldo total: <b>$${nuevoSaldo}</b></p>
+    `,
         icon: 'success',
+        iconColor: '#ffffff', // El check verde ahora es blanco para combinar
+
         
-        showCancelButton: true, // Habilita el segundo botón
-        
-        // Configuramos el botón Principal (Ir al Menú)
-        confirmButtonText: 'Ir al Menú',
-        confirmButtonColor: '#28a745', // Verde (éxito)
-        
-        // Configuramos el botón Secundario (Otro depósito)
+        background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
+        color: '#ffffff',
+
+        showCancelButton: true,
+
+        // Ponemos HTML dentro del texto del botón para forzar el color morado
+        confirmButtonText: '<span style="color: #582551; font-weight: bold;">Ir al Menú</span>',
+        confirmButtonColor: '#ffffff',
+
+        // Botón SECUNDARIO (Otro depósito)
         cancelButtonText: 'Hacer otro depósito',
-        cancelButtonColor: '#3085d6', // Azul
+        cancelButtonColor: '#480ca8', // Un morado más oscuro
+
+        allowOutsideClick: false,
+
         
-        // Esto hace que si dan clic fuera, no se cierre solo
-        allowOutsideClick: false 
+        showClass: {
+            popup: 'animate__animated animate__fadeInUp animate__faster'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOut animate__faster'
+        }
+
     }).then((result) => {
         registrarDeposito(montoIngresado);
-        
+
         if (result.isConfirmed) {
-            window.location.href = 'menu.html';
-        } 
+            // Si aprieta "Ir al Menú"
+            cambiarPagina('menu.html', 'Menú Principal');
+        }
         else if (result.dismiss === Swal.DismissReason.cancel) {
-            inputMonto.value = ''; 
+            // Si aprieta "Hacer otro depósito", limpiamos el input
+            document.getElementById('depositAmount').value = '';
         }
     });
 });
