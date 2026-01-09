@@ -1,5 +1,5 @@
 body {
-  background: url('https://nomorecopyright.com/_next/image?url=https://res.cloudinary.com/ddtk9h9bc/image/upload/v1752176871/znvjezwrtwman9xw1jup.webp&w=1200&q=75') no-repeat center center fixed;
+  background: url('../img/fondo_alkewallet.png') no-repeat center center fixed;
   background-size: cover;
   box-shadow: inset 0 0 0 2000px rgba(30, 10, 60, 0.5);
   backdrop-filter: blur(5px);
