@@ -26,7 +26,77 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarBotones();
     cargarContactos();
     activarBotonesAccion();
+    activarBusquedaContacto();
 });
+
+/*
+Esta función habilita la búsqueda en tiempo real usando jQuery.
+Lo que hace es escuchar cada vez que el usuario escribe algo en el input
+y filtra la lista de contactos automáticamente.
+*/
+function activarBusquedaContacto() {
+    // Usamos el selector de jQuery ($) para buscar el input por su ID
+    // y el evento "input" detecta cada tecla que se presiona.
+    $('#searchContact').on('input', function () {
+
+        // 1. Obtenemos lo que escribió el usuario y lo pasamos a minusculas
+        // para que la búsqueda no discrimine entre mayúsculas y minúsculas.
+        let query = $(this).val().toLowerCase();
+
+        // 2. Traemos todos los contactos guardados en el LocalStorage
+        const contactos = JSON.parse(localStorage.getItem(CLAVE_CONTACTOS));
+
+        // Si borró todo lo que escribio, mostramos la lista completa de nuevo.
+        if (query === '') {
+            renderizarLista(contactos);
+            return;
+        }
+
+        /* 
+        3. Lógica de PRIORIDAD para el filtro.
+        Como definimos antes, el orden de importancia es:
+        Primero por Nombre -> Luego por Alias -> Finalmente por CBU
+        */
+
+        // Buscamos coincidencia por Nombre
+        const matchesNombre = contactos.filter(c => c.nombre.toLowerCase().includes(query));
+
+        // Buscamos coincidencia por Alias
+        // ¡Ojo! Aquí validamos que el contacto NO este ya en la lista de nombres
+        // para que no aparezca repetido en pantalla.
+        const matchesAlias = contactos.filter(c =>
+            c.alias.toLowerCase().includes(query) &&
+            !matchesNombre.includes(c)
+        );
+
+        // Buscamos coincidencia por CBU
+        // Aquí verificamos que no esté ni en nombres ni en alias.
+        const matchesCBU = contactos.filter(c =>
+            c.cbu.toString().includes(query) &&
+            !matchesNombre.includes(c) &&
+            !matchesAlias.includes(c)
+        );
+
+
+        // 4. Unimos las tres listas en el orden que queremos usando el Spread Operator (...)
+        // Esto crea una lista única ordenada por prioridad.
+        const resultadosFinales = [...matchesNombre, ...matchesAlias, ...matchesCBU];
+
+        // 5. Validamos si hay resultados
+        if (resultadosFinales.length === 0) {
+            // Si no hay coincidencias, mostramos una alerta de Bootstrap
+            // Usamos jQuery para inyectar el HTML directamente en la lista
+            $('#listaContactos').html(`
+                <div class="alert alert-warning text-center" role="alert">
+                    No se encontraron contactos que coincidan con tu búsqueda.
+                </div>
+            `);
+        } else {
+            // 6. Si hay resultados, llamamos a nuestra función de renderizado normal
+            renderizarLista(resultadosFinales);
+        }
+    });
+}
 
 
 function configurarBotones() {
@@ -48,13 +118,13 @@ function cambiarPagina(url, nombrePagina) {
     Swal.fire({
         title: 'Redirigiendo a ' + nombrePagina,
         html: '<p style="margin-top: 10px;">Procesando solicitud...</p>',
-        
+
         icon: 'info',
         iconColor: '#ffffff',
         timer: 1500,
         timerProgressBar: true,
         showConfirmButton: false,
-        
+
         background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
         color: '#ffffff',
 
@@ -64,13 +134,13 @@ function cambiarPagina(url, nombrePagina) {
         hideClass: {
             popup: 'animate__animated animate__fadeOut animate__faster'
         },
-        
+
         // Estilo de la barrita de carga (blanca semitransparente)
         didOpen: () => {
             const b = Swal.getHtmlContainer().querySelector('.swal2-timer-progress-bar');
             if (b) b.style.backgroundColor = 'rgba(255,255,255,0.5)';
         },
-        
+
         allowOutsideClick: false
     }).then(() => {
         window.location.href = url;
@@ -134,11 +204,11 @@ y actualiza la lista en pantalla.
 function agregarContactoNuevo() {
     Swal.fire({
         title: 'Nuevo Contacto',
-        
+
         // --- FONDO Y TEXTO NUEVOS---
         background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
         color: '#ffffff',
-        
+
         // --- INPUTS DE VIDRIO ---
         // Inyectamos CSS aquí mismo para forzar que los inputs sean transparentes ya que el
         // los inputs al parecer tienen mucha prioridad (Hablando de SweetAlert). 
@@ -165,16 +235,16 @@ function agregarContactoNuevo() {
             <input id="input-alias" class="swal2-input" placeholder="Alias (ej: Name.wallet)">
             <input id="input-banco" class="swal2-input" placeholder="Nombre del Banco">
         `,
-        
+
         focusConfirm: false,
         showCancelButton: true,
-        
+
         // --- BOTONES ---
         // Botón Guardar. Esto lo aplique varias veces antes, pero es mas comodo inyectar codigo html directamente
         // para poder modificar el estilo de los botones a gusto.
         confirmButtonText: '<span style="color: #582551; font-weight: bold;">Guardar</span>',
-        confirmButtonColor: '#ffffff', 
-        
+        confirmButtonColor: '#ffffff',
+
         // Botón Cancelar: Morado oscuro
         cancelButtonText: 'Cancelar',
         cancelButtonColor: '#480ca8',
@@ -331,11 +401,11 @@ function activarBotonesAccion() {
                 color: '#ffffff',
 
                 showCancelButton: true,
-                
+
                 // Botón Eliminar (Rojo brillante para peligro)
                 confirmButtonColor: '#ff4d4d',
                 confirmButtonText: 'Sí, eliminar',
-                
+
                 // Botón Cancelar (Morado oscuro)
                 cancelButtonColor: '#480ca8',
                 cancelButtonText: 'Cancelar'
@@ -354,7 +424,7 @@ function activarBotonesAccion() {
 
                     indiceSeleccionado = null;
                     document.getElementById('searchContact').value = '';
-                    
+
                     // Alerta: Eliminado con éxito (Estilo Glass)
                     Swal.fire({
                         title: 'Eliminado',
@@ -402,7 +472,7 @@ function activarBotonesAccion() {
             // Alerta: Ingreso de Monto +
             Swal.fire({
                 title: `Enviar a ${contactoDestino.nombre}`, // Muestra el nombre en el título
-                
+
                 // Inyectamos estilos CSS aquí para el Input
                 html: `
                     <style>
@@ -417,21 +487,21 @@ function activarBotonesAccion() {
                     <p>Saldo disponible: <b>$${saldoActual}</b></p>
                     <p style="margin-top:10px; font-size: 0.9em;">Ingresa el monto:</p>
                 `,
-                
+
                 input: 'number',
                 inputAttributes: { min: 0, step: 1 },
-                // Esto segun sweetalert es, min: minimo que puede tener el input. Y avanza de 1 en 1 si se hace 
+                // Esto segun sweetalert es; min: minimo que puede tener el input, step: avanza de 1 en 1 si se hace 
                 // con la barra que esta a la derecha del input.
-                
+
                 background: 'linear-gradient(135deg, #3c096c, #7b2cbf)',
                 color: '#ffffff',
 
                 showCancelButton: true,
-                
+
                 // Botón Transferir (Blanco)
                 confirmButtonColor: '#ffffff',
                 confirmButtonText: '<span style="color: #582551; font-weight: bold;">Transferir</span>',
-                
+
                 // Botón Cancelar (Morado oscuro)
                 cancelButtonColor: '#480ca8',
                 cancelButtonText: 'Cancelar',
@@ -512,9 +582,9 @@ function registrarTransaccion(nombreContacto, monto, deposito) {
     // 3. Obtenemos el historial usando la MISMA clave que usas en cargarMovimientos
     let movimientos = JSON.parse(localStorage.getItem(CLAVE_HISTORIAL)) || [];
 
-        // 4. Agregamos el nuevo movimiento al principio (arriba de todo)
-        movimientos.unshift(nuevaTransaccion);
+    // 4. Agregamos el nuevo movimiento al principio (arriba de todo)
+    movimientos.unshift(nuevaTransaccion);
 
-        // 5. Guardamos en LocalStorage
-        localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(movimientos));
-    }
+    // 5. Guardamos en LocalStorage
+    localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(movimientos));
+}
